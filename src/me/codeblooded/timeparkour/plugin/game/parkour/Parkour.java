@@ -10,6 +10,8 @@ public class Parkour {
 
     private Location start, end;
 
+    private boolean initialized = false;
+
     private HashMap<Integer, Location> checkpoints = new HashMap<Integer, Location>();
 
     public Parkour(String name) {
@@ -38,6 +40,15 @@ public class Parkour {
 
     public HashMap<Integer, Location> getCheckpoints() {
         return checkpoints;
+    }
+
+    public void initialize() {
+        if(name != null && start != null && end != null)
+            initialized = true;
+    }
+
+    public boolean isInitialized() {
+        return initialized;
     }
 
     public void destroy() {

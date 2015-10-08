@@ -1,7 +1,32 @@
 package me.codeblooded.timeparkour.plugin.command.commands;
 
-/**
- * Created by Binyon on 05/10/2015.
- */
-public class Remove {
+import me.codeblooded.timeparkour.TimeParkour;
+import me.codeblooded.timeparkour.plugin.command.Command;
+import me.codeblooded.timeparkour.plugin.utils.Message;
+import org.bukkit.entity.Player;
+
+public class Remove extends Command {
+
+    public Remove(String name, String help, String[] args) {
+        super(name, help, args);
+    }
+
+    @Override
+    public void run(Player p, String[] args) {
+        if(args.length == 0) {
+            p.sendMessage(Message.ERROR.format("&c/timeparkour remove <map>"));
+
+            return;
+        }
+
+        if(TimeParkour.getParkourManager().getParkour(args[0]) != null) {
+            p.sendMessage(Message.ERROR.format("&cNo map found with the name " + args[0] + "."));
+
+            return;
+        }
+
+        TimeParkour.getParkourManager().removeMap(args[0]);
+
+        p.sendMessage(Message.SUCCESS.format("&eMap successfully removed."));
+    }
 }

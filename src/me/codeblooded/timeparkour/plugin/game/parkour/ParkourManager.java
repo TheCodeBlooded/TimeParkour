@@ -34,6 +34,8 @@ public class ParkourManager {
 
             parkour.setEnd(LocationUtils.stringToLocation(fc.getString(path + ".End")));
 
+            parkour.initialize();
+
             for(String id : fc.getConfigurationSection(path + ".Checkpoints").getKeys(false)) {
                 parkour.getCheckpoints().put(Integer.valueOf(id), LocationUtils.stringToLocation(fc.getString(path + ".Checkpoints." + id)));
             }
