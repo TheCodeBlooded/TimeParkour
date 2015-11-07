@@ -1,6 +1,7 @@
 package me.codeblooded.timeparkour;
 
 import me.codeblooded.timeparkour.plugin.Manager;
+import me.codeblooded.timeparkour.plugin.command.CommandManager;
 import me.codeblooded.timeparkour.plugin.game.GameManager;
 import me.codeblooded.timeparkour.plugin.game.parkour.ParkourManager;
 import me.codeblooded.timeparkour.plugin.game.stats.StatsManager;
@@ -25,6 +26,8 @@ public class TimeParkour extends JavaPlugin {
         gameManager = new GameManager();
 
         statsManager = new StatsManager();
+
+        getCommand("timeparkour").setExecutor(new CommandManager());
     }
 
     @Override

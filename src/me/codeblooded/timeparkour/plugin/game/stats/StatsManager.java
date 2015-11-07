@@ -14,6 +14,8 @@ public class StatsManager {
 
     protected DBConnector connector;
 
+    private List<Profile> profiles = new ArrayList<Profile>();
+
     public static StatsManager getInstance() {
         return instance;
     }
@@ -60,7 +62,42 @@ public class StatsManager {
     /*
      *   Returns if database entry was successful
      */
-    public boolean updatePlayerEntry(Player p, String map, int time) {
+    public boolean gatherPlayerEntry(Player p, String map) {
+        String statement = null;
+
+        PreparedStatement preparedStatement = null;
+
+        boolean successful = false;
+
+        try {
+            if(connector.contains(map, "uuid", p.getUniqueId().toString())) {
+                // TODO Generate statement
+
+                preparedStatement = connector.getConnection().prepareStatement(statement);
+
+                preparedStatement.execute();
+
+                successful = true;
+            } else {
+                // TODO Generate default stats
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return successful;
+    }
+
+    /*
+     *   Returns if database entry was successful
+     */
+    public boolean updatePlayerEntry(Player p, String map) {
         String statement = null;
 
         PreparedStatement preparedStatement = null;
@@ -132,10 +169,12 @@ public class StatsManager {
 
     /*
      *   Returns players position on a maps scoreboard
-     *   List<Object> contains player time and position
+     *   Object[] contains player time and position
+     *   Object[0] - position
+     *   Object[1] - record time
      */
-    public HashMap<UUID, List<Object>> getTopEntries(String map) {
-        HashMap<UUID, List<Object>> scores = new HashMap<UUID, List<Object>>();
+    public HashMap<UUID, Object[]> getTopEntries(String map) {
+        HashMap<UUID, Object[]> scores = new HashMap<UUID, Object[]>();
 
         String statement = "SELECT * FROM (SELECT @position:=@position+1 AS position, uuid, name, first, last, record, attempts, (SELECT @position := 0) r ORDER BY record DESC) t LIMIT 5";
 
@@ -149,13 +188,7 @@ public class StatsManager {
             results = preparedStatement.executeQuery();
 
             while(results.next()) {
-                List<Object> objects = new ArrayList<Object>();
-
-                objects.add(results.getInt("position"));
-
-                objects.add(results.getInt("record"));
-
-                scores.put(UUID.fromString(results.getString("uuid")), objects);
+                scores.put(UUID.fromString(results.getString("uuid")), new Object[] { results.getInt("position"), results.getInt("record") });
             }
         } catch (SQLException e) {
             e.printStackTrace();
