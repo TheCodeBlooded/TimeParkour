@@ -9,12 +9,13 @@ import java.sql.SQLException;
 public class DBConnector {
 	
 	private String databaseHost, databaseName, username, password;
+	private int databaseHostPort;
 	
 	private Connection connection;
 	
 	public DBConnector() {}
 	
-	public DBConnector(String username, String password, String databaseHost, String databaseName) {
+	public DBConnector(String username, String password, String databaseHost, int databaseHostPort, String databaseName) {
 		this.username = username;
 		
 	    this.password = password;
@@ -23,11 +24,13 @@ public class DBConnector {
 	    
 	    this.databaseName = databaseName;
 	    
+	    this.databaseHostPort = databaseHostPort;
+	    
 	    connection = null;
 	}
 	
 	public synchronized Connection openConnection() {		
-		String url = "jdbc:mysql://" + this.databaseHost + ":3306/" + this.databaseName;
+		String url = "jdbc:mysql://" + this.databaseHost + ":" + this.databaseHostPort + "/" + this.databaseName;
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
